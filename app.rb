@@ -1,5 +1,5 @@
 require 'sinatra/base'
-
+require_relative 'lib/rps'
 class Rps < Sinatra::Base
   enable 'sessions'
 
@@ -8,10 +8,15 @@ class Rps < Sinatra::Base
   end
 
   post('/names')do
-  @playername = params[:playername]
-  "Thank you for registering"
-end 
+  session[:playername] = params[:playername]
+  @player = session[:playername]
+  erb(:input)
+end
 
+post('/result') do
+  game = Game.new(params[:input])
+  game.play
+end
 
 
   run! if app_file == $0
